@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using QuanLyDeTaiNghienCuu_DTO;
 using QuanLyDeTaiNghienCuu_BLL;
@@ -140,7 +140,16 @@ namespace QuanLyDeTaiNghienCuu_GUI
             List<DeTaiNCKH> danhSach = deTaiBLL.DocDanhSachDeTai();
             foreach (var deTai in danhSach)
             {
-                Console.WriteLine($"Mã số: {deTai.MaSo}, Tên đề tài: {deTai.TenDeTai}, Chủ trì: {deTai.NguoiChuTri}, Giảng viên hướng dẫn: {deTai.GiangVienHuongDan}, Kinh phí: {deTai.TinhKinhPhi()}, Thời gian: {deTai.ThoiGianBatDau.ToShortDateString()} - {deTai.ThoiGianKetThuc.ToShortDateString()}");
+                Console.WriteLine("Thông tin Đề tài Nghiên cứu:");
+                Console.WriteLine("--------------------------------------------------");
+                Console.WriteLine($"Mã số:               {deTai.MaSo}");
+                Console.WriteLine($"Tên đề tài:           {deTai.TenDeTai}");
+                Console.WriteLine($"Người chủ trì:        {deTai.NguoiChuTri}");
+                Console.WriteLine($"Giảng viên hướng dẫn: {deTai.GiangVienHuongDan}");
+                Console.WriteLine($"Kinh phí:             {deTai.TinhKinhPhi()}");
+                Console.WriteLine($"Thời gian bắt đầu:    {deTai.ThoiGianBatDau.ToShortDateString()}");
+                Console.WriteLine($"Thời gian kết thúc:   {deTai.ThoiGianKetThuc.ToShortDateString()}");
+                Console.WriteLine("--------------------------------------------------");
             }
         }
 
@@ -164,7 +173,16 @@ namespace QuanLyDeTaiNghienCuu_GUI
                     string thoiGianBatDau = deTai.ThoiGianBatDau != null ? deTai.ThoiGianBatDau.ToShortDateString() : "Chưa xác định";
                     string thoiGianKetThuc = deTai.ThoiGianKetThuc != null ? deTai.ThoiGianKetThuc.ToShortDateString() : "Chưa xác định";
 
-                    Console.WriteLine($"Mã số: {deTai.MaSo}, Tên đề tài: {deTai.TenDeTai}, Chủ trì: {nguoiChuTri}, Giảng viên hướng dẫn: {giangVienHuongDan}, Kinh phí: {deTai.KinhPhi}, Thời gian: {thoiGianBatDau} - {thoiGianKetThuc}");
+                    Console.WriteLine("Thông tin Đề tài Nghiên cứu:");
+                    Console.WriteLine("--------------------------------------------------");
+                    Console.WriteLine($"Mã số:               {deTai.MaSo}");
+                    Console.WriteLine($"Tên đề tài:           {deTai.TenDeTai}");
+                    Console.WriteLine($"Người chủ trì:        {deTai.NguoiChuTri}");
+                    Console.WriteLine($"Giảng viên hướng dẫn: {deTai.GiangVienHuongDan}");
+                    Console.WriteLine($"Kinh phí:             {deTai.TinhKinhPhi()}");
+                    Console.WriteLine($"Thời gian bắt đầu:    {deTai.ThoiGianBatDau.ToShortDateString()}");
+                    Console.WriteLine($"Thời gian kết thúc:   {deTai.ThoiGianKetThuc.ToShortDateString()}");
+                    Console.WriteLine("--------------------------------------------------");
                 }
             }
         }
@@ -182,7 +200,16 @@ namespace QuanLyDeTaiNghienCuu_GUI
             {
                 foreach (var deTai in ketQua)
                 {
-                    Console.WriteLine($"Mã số: {deTai.MaSo}, Tên đề tài: {deTai.TenDeTai}, Chủ trì: {deTai.NguoiChuTri}, Giảng viên hướng dẫn: {deTai.GiangVienHuongDan}, Kinh phí: {deTai.KinhPhi}, Thời gian: {deTai.ThoiGianBatDau.ToShortDateString()} - {deTai.ThoiGianKetThuc.ToShortDateString()}");
+                    Console.WriteLine("Thông tin Đề tài Nghiên cứu:");
+                    Console.WriteLine("--------------------------------------------------");
+                    Console.WriteLine($"Mã số:               {deTai.MaSo}");
+                    Console.WriteLine($"Tên đề tài:           {deTai.TenDeTai}");
+                    Console.WriteLine($"Người chủ trì:        {deTai.NguoiChuTri}");
+                    Console.WriteLine($"Giảng viên hướng dẫn: {deTai.GiangVienHuongDan}");
+                    Console.WriteLine($"Kinh phí:             {deTai.TinhKinhPhi()}");
+                    Console.WriteLine($"Thời gian bắt đầu:    {deTai.ThoiGianBatDau.ToShortDateString()}");
+                    Console.WriteLine($"Thời gian kết thúc:   {deTai.ThoiGianKetThuc.ToShortDateString()}");
+                    Console.WriteLine("--------------------------------------------------");
                 }
             }
         }
@@ -205,7 +232,16 @@ namespace QuanLyDeTaiNghienCuu_GUI
             {
                 foreach (var deTai in ketQua)
                 {
-                    Console.WriteLine($"Mã số: {deTai.MaSo}, Tên đề tài: {deTai.TenDeTai}, Kinh phí: {deTai.TinhKinhPhi()}");
+                    Console.WriteLine("Thông tin Đề tài Nghiên cứu:");
+                    Console.WriteLine("--------------------------------------------------");
+                    Console.WriteLine($"Mã số:               {deTai.MaSo}");
+                    Console.WriteLine($"Tên đề tài:           {deTai.TenDeTai}");
+                    Console.WriteLine($"Người chủ trì:        {deTai.NguoiChuTri}");
+                    Console.WriteLine($"Giảng viên hướng dẫn: {deTai.GiangVienHuongDan}");
+                    Console.WriteLine($"Kinh phí:             {deTai.TinhKinhPhi()}");
+                    Console.WriteLine($"Thời gian bắt đầu:    {deTai.ThoiGianBatDau.ToShortDateString()}");
+                    Console.WriteLine($"Thời gian kết thúc:   {deTai.ThoiGianKetThuc.ToShortDateString()}");
+                    Console.WriteLine("--------------------------------------------------");
                 }
             }
         }
@@ -221,7 +257,16 @@ namespace QuanLyDeTaiNghienCuu_GUI
             {
                 foreach (var deTai in ketQua)
                 {
-                    Console.WriteLine($"Mã số: {deTai.MaSo}, Tên đề tài: {deTai.TenDeTai}, Kinh phí: {deTai.KinhPhi}");
+                    Console.WriteLine("Thông tin Đề tài Nghiên cứu:");
+                    Console.WriteLine("--------------------------------------------------");
+                    Console.WriteLine($"Mã số:               {deTai.MaSo}");
+                    Console.WriteLine($"Tên đề tài:           {deTai.TenDeTai}");
+                    Console.WriteLine($"Người chủ trì:        {deTai.NguoiChuTri}");
+                    Console.WriteLine($"Giảng viên hướng dẫn: {deTai.GiangVienHuongDan}");
+                    Console.WriteLine($"Kinh phí:             {deTai.TinhKinhPhi()}");
+                    Console.WriteLine($"Thời gian bắt đầu:    {deTai.ThoiGianBatDau.ToShortDateString()}");
+                    Console.WriteLine($"Thời gian kết thúc:   {deTai.ThoiGianKetThuc.ToShortDateString()}");
+                    Console.WriteLine("--------------------------------------------------");
                 }
             }
         }
@@ -237,7 +282,16 @@ namespace QuanLyDeTaiNghienCuu_GUI
             {
                 foreach (var deTai in ketQua)
                 {
-                    Console.WriteLine($"Mã số: {deTai.MaSo}, Tên đề tài: {deTai.TenDeTai}, Số câu hỏi: {(deTai as DeTaiKinhTe).SoCauHoiKhaoSat}");
+                    Console.WriteLine("Thông tin Đề tài Nghiên cứu:");
+                    Console.WriteLine("--------------------------------------------------");
+                    Console.WriteLine($"Mã số:               {deTai.MaSo}");
+                    Console.WriteLine($"Tên đề tài:           {deTai.TenDeTai}");
+                    Console.WriteLine($"Người chủ trì:        {deTai.NguoiChuTri}");
+                    Console.WriteLine($"Giảng viên hướng dẫn: {deTai.GiangVienHuongDan}");
+                    Console.WriteLine($"Kinh phí:             {deTai.TinhKinhPhi()}");
+                    Console.WriteLine($"Thời gian bắt đầu:    {deTai.ThoiGianBatDau.ToShortDateString()}");
+                    Console.WriteLine($"Thời gian kết thúc:   {deTai.ThoiGianKetThuc.ToShortDateString()}");
+                    Console.WriteLine("--------------------------------------------------");
                 }
             }
         }
@@ -253,25 +307,23 @@ namespace QuanLyDeTaiNghienCuu_GUI
             {
                 foreach (var deTai in ketQua)
                 {
-                    Console.WriteLine($"Mã số: {deTai.MaSo}, Tên đề tài: {deTai.TenDeTai}, Thời gian thực hiện: {(deTai.ThoiGianKetThuc - deTai.ThoiGianBatDau).Days} ngày");
+                    Console.WriteLine("Thông tin Đề tài Nghiên cứu:");
+                    Console.WriteLine("--------------------------------------------------");
+                    Console.WriteLine($"Mã số:               {deTai.MaSo}");
+                    Console.WriteLine($"Tên đề tài:           {deTai.TenDeTai}");
+                    Console.WriteLine($"Người chủ trì:        {deTai.NguoiChuTri}");
+                    Console.WriteLine($"Giảng viên hướng dẫn: {deTai.GiangVienHuongDan}");
+                    Console.WriteLine($"Kinh phí:             {deTai.TinhKinhPhi()}");  
+                    Console.WriteLine($"Thời gian bắt đầu:    {deTai.ThoiGianBatDau.ToShortDateString()}");
+                    Console.WriteLine($"Thời gian kết thúc:   {deTai.ThoiGianKetThuc.ToShortDateString()}");
+                    Console.WriteLine("--------------------------------------------------");
+
                 }
             }
         }
         static void DocDanhSachDeTai()
         {
             List<DeTaiNCKH> danhSach = deTaiBLL.DocDanhSachDeTai();
-            //if (danhSach.Count == 0)
-            //{
-            //    Console.WriteLine("Không có đề tài nào trong file.");
-            //}
-            //else
-            //{
-            //    foreach (var deTai in danhSach)
-            //    {
-            //        Console.WriteLine($"Mã số: {deTai.MaSo}, Tên đề tài: {deTai.TenDeTai}, Chủ trì: {deTai.NguoiChuTri}, Giảng viên hướng dẫn: {deTai.GiangVienHuongDan}, Kinh phí: {deTai.TinhKinhPhi()}, Thời gian: {deTai.ThoiGianBatDau.ToShortDateString()} - {deTai.ThoiGianKetThuc.ToShortDateString()}");
-            //    }
-            //}
         }
     }
 }
-
