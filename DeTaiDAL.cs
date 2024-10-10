@@ -67,7 +67,7 @@ namespace QuanLyDeTaiNghienCuu_DAL
         }
 
 
-        private DeTaiNCKH ChuyenDoiXMLSangDeTai(XmlNode node)
+        public DeTaiNCKH ChuyenDoiXMLSangDeTai(XmlNode node)
         {
             string loaiDeTai = node["LoaiDeTai"].InnerText;
 
@@ -112,7 +112,7 @@ namespace QuanLyDeTaiNghienCuu_DAL
             }
             return deTai;
         }
-        private XmlElement ChuyenDoiDeTaiSangXML(DeTaiNCKH deTai)
+        public XmlElement ChuyenDoiDeTaiSangXML(DeTaiNCKH deTai)
         {
             XmlDocument xmlDoc = new XmlDocument();
             XmlElement deTaiNode = xmlDoc.CreateElement("DeTaiNCKH");
