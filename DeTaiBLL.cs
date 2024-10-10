@@ -21,7 +21,7 @@ namespace QuanLyDeTaiNghienCuu_BLL
             LuuDanhSachDeTai();
         }
 
-        private void LuuDanhSachDeTai()
+        public void LuuDanhSachDeTai()
         {
             deTaiDAL.LuuDanhSachDeTai(danhSachDeTai);
         }
