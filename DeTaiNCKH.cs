@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,44 +15,43 @@ namespace QuanLyDeTaiNghienCuu_DTO
         private string giangVienHuongDan;
         private DateTime thoiGianBatDau;
         private DateTime thoiGianKetThuc;
-    
-        // Property cho các biến private
+
         public string MaSo
         {
             get { return maSo; }
             set { maSo = value; }
         }
-    
+
         public string TenDeTai
         {
             get { return tenDeTai; }
             set { tenDeTai = value; }
         }
-    
+
         public double KinhPhi
         {
             get { return kinhPhi; }
             set { kinhPhi = value; }
         }
-    
+
         public string NguoiChuTri
         {
             get { return nguoiChuTri; }
             set { nguoiChuTri = value; }
         }
-    
+
         public string GiangVienHuongDan
         {
             get { return giangVienHuongDan; }
             set { giangVienHuongDan = value; }
         }
-    
+
         public DateTime ThoiGianBatDau
         {
             get { return thoiGianBatDau; }
             set { thoiGianBatDau = value; }
         }
-    
+
         public DateTime ThoiGianKetThuc
         {
             get { return thoiGianKetThuc; }
@@ -66,13 +65,14 @@ namespace QuanLyDeTaiNghienCuu_DTO
 
     public class DeTaiLyThuyet : DeTaiNCKH
     {
-        private int soCauHoiKhaoSat;
+        private bool _apDungThucTe;
 
-        public int SoCauHoiKhaoSat
+        public bool ApDungThucTe
         {
-            get { return soCauHoiKhaoSat; }
-            set { soCauHoiKhaoSat = value; }
+            get { return _apDungThucTe; }
+            set { _apDungThucTe = value; }
         }
+
 
         public override double TinhKinhPhi()
         {
@@ -80,12 +80,12 @@ namespace QuanLyDeTaiNghienCuu_DTO
         }
     }
 
-    public interface ITinhPhiNghienCuu
+    public interface I
     {
         double TinhPhiNghienCuu();
     }
 
-    public class DeTaiKinhTe : DeTaiNCKH,I
+    public class DeTaiKinhTe : DeTaiNCKH, I
     {
         private int soCauHoiKhaoSat;
         public int SoCauHoiKhaoSat
@@ -98,13 +98,13 @@ namespace QuanLyDeTaiNghienCuu_DTO
             return SoCauHoiKhaoSat > 100 ? 12000000 : 7000000;
         }
 
-        public override double TinhPhiNghienCuu()
+        public  double TinhPhiNghienCuu()
         {
             return SoCauHoiKhaoSat > 100 ? SoCauHoiKhaoSat * 550 : SoCauHoiKhaoSat * 450;
         }
     }
 
-    public class DeTaiCongNghe : DeTaiNCKH,I
+    public class DeTaiCongNghe : DeTaiNCKH, I
     {
         private string moiTruong;
 
@@ -121,7 +121,7 @@ namespace QuanLyDeTaiNghienCuu_DTO
                 return 10000000;
         }
 
-        public override double TinhPhiNghienCuu()
+        public  double TinhPhiNghienCuu()
         {
             if (MoiTruong == "mobile")
                 return 1000000;
