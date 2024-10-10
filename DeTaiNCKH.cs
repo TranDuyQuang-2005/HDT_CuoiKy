@@ -8,14 +8,56 @@ namespace QuanLyDeTaiNghienCuu_DTO
 {
     public class DeTaiNCKH
     {
-        public string MaSo { get; set; }
-        public string TenDeTai { get; set; }
-        public double KinhPhi { get; set; }
-        public string NguoiChuTri { get; set; }
-        public string GiangVienHuongDan { get; set; }
-        public DateTime ThoiGianBatDau { get; set; }
-        public DateTime ThoiGianKetThuc { get; set; }
-
+        private string maSo;
+        private string tenDeTai;
+        private double kinhPhi;
+        private string nguoiChuTri;
+        private string giangVienHuongDan;
+        private DateTime thoiGianBatDau;
+        private DateTime thoiGianKetThuc;
+    
+        // Property cho các biến private
+        public string MaSo
+        {
+            get { return maSo; }
+            set { maSo = value; }
+        }
+    
+        public string TenDeTai
+        {
+            get { return tenDeTai; }
+            set { tenDeTai = value; }
+        }
+    
+        public double KinhPhi
+        {
+            get { return kinhPhi; }
+            set { kinhPhi = value; }
+        }
+    
+        public string NguoiChuTri
+        {
+            get { return nguoiChuTri; }
+            set { nguoiChuTri = value; }
+        }
+    
+        public string GiangVienHuongDan
+        {
+            get { return giangVienHuongDan; }
+            set { giangVienHuongDan = value; }
+        }
+    
+        public DateTime ThoiGianBatDau
+        {
+            get { return thoiGianBatDau; }
+            set { thoiGianBatDau = value; }
+        }
+    
+        public DateTime ThoiGianKetThuc
+        {
+            get { return thoiGianKetThuc; }
+            set { thoiGianKetThuc = value; }
+        }
         public virtual double TinhKinhPhi()
         {
             return KinhPhi;
@@ -24,7 +66,13 @@ namespace QuanLyDeTaiNghienCuu_DTO
 
     public class DeTaiLyThuyet : DeTaiNCKH
     {
-        public bool ApDungThucTe { get; set; }
+        private int soCauHoiKhaoSat;
+
+        public int SoCauHoiKhaoSat
+        {
+            get { return soCauHoiKhaoSat; }
+            set { soCauHoiKhaoSat = value; }
+        }
 
         public override double TinhKinhPhi()
         {
@@ -32,25 +80,39 @@ namespace QuanLyDeTaiNghienCuu_DTO
         }
     }
 
-    public class DeTaiKinhTe : DeTaiNCKH
+    public interface ITinhPhiNghienCuu
     {
-        public int SoCauHoiKhaoSat { get; set; }
+        double TinhPhiNghienCuu();
+    }
 
+    public class DeTaiKinhTe : DeTaiNCKH,I
+    {
+        private int soCauHoiKhaoSat;
+        public int SoCauHoiKhaoSat
+        {
+            get { return soCauHoiKhaoSat; }
+            set { soCauHoiKhaoSat = value; }
+        }
         public override double TinhKinhPhi()
         {
             return SoCauHoiKhaoSat > 100 ? 12000000 : 7000000;
         }
 
-        public double TinhPhiNghienCuu()
+        public override double TinhPhiNghienCuu()
         {
             return SoCauHoiKhaoSat > 100 ? SoCauHoiKhaoSat * 550 : SoCauHoiKhaoSat * 450;
         }
     }
 
-    public class DeTaiCongNghe : DeTaiNCKH
+    public class DeTaiCongNghe : DeTaiNCKH,I
     {
-        public string MoiTruong { get; set; }
+        private string moiTruong;
 
+        public string MoiTruong
+        {
+            get { return moiTruong; }
+            set { moiTruong = value; }
+        }
         public override double TinhKinhPhi()
         {
             if (MoiTruong == "web" || MoiTruong == "mobile")
@@ -59,7 +121,7 @@ namespace QuanLyDeTaiNghienCuu_DTO
                 return 10000000;
         }
 
-        public double TinhPhiNghienCuu()
+        public override double TinhPhiNghienCuu()
         {
             if (MoiTruong == "mobile")
                 return 1000000;
