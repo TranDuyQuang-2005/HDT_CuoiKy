@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace QuanLyDeTaiNghienCuu_DTO
 {
-    public class DeTaiNCKH
+    public abstract class DeTaiNCKH
     {
         private string maSo;
         private string tenDeTai;
@@ -57,10 +57,7 @@ namespace QuanLyDeTaiNghienCuu_DTO
             get { return thoiGianKetThuc; }
             set { thoiGianKetThuc = value; }
         }
-        public virtual double TinhKinhPhi()
-        {
-            return KinhPhi;
-        }
+        public abstract double TinhKinhPhi();
     }
 
     public class DeTaiLyThuyet : DeTaiNCKH
