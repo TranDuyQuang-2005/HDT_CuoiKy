@@ -15,6 +15,7 @@ namespace QuanLyDeTaiNghienCuu_DAL
         string FilePath = "D:\\HDT_BaiNhomCuoiKy\\QuanLyDeTaiNghienCuu_GUI\\DanhSachDeTai.xml";
         public List<DeTaiNCKH> DocDanhSachDeTai()
         {
+            
             List<DeTaiNCKH> danhSachDeTai = new List<DeTaiNCKH>();
             if (!File.Exists(FilePath))
                 return danhSachDeTai;
@@ -38,7 +39,6 @@ namespace QuanLyDeTaiNghienCuu_DAL
             {
                 XmlElement deTaiNode = xmlDoc.CreateElement("DeTaiNCKH");
 
-                // Thêm thẻ LoaiDeTai
                 XmlElement loaiDeTai = xmlDoc.CreateElement("LoaiDeTai");
                 if (deTai is DeTaiLyThuyet)
                 {
@@ -54,37 +54,30 @@ namespace QuanLyDeTaiNghienCuu_DAL
                 }
                 deTaiNode.AppendChild(loaiDeTai);
 
-                // Thêm thẻ MaSo
                 XmlElement maSo = xmlDoc.CreateElement("MaSo");
                 maSo.InnerText = deTai.MaSo;
                 deTaiNode.AppendChild(maSo);
 
-                // Thêm thẻ TenDeTai
                 XmlElement tenDeTai = xmlDoc.CreateElement("TenDeTai");
                 tenDeTai.InnerText = deTai.TenDeTai;
                 deTaiNode.AppendChild(tenDeTai);
 
-                // Thêm thẻ NguoiChuTri
                 XmlElement nguoiChuTri = xmlDoc.CreateElement("NguoiChuTri");
                 nguoiChuTri.InnerText = deTai.NguoiChuTri;
                 deTaiNode.AppendChild(nguoiChuTri);
 
-                // Thêm thẻ GiangVienHuongDan
                 XmlElement giangVienHuongDan = xmlDoc.CreateElement("GiangVienHuongDan");
                 giangVienHuongDan.InnerText = deTai.GiangVienHuongDan;
                 deTaiNode.AppendChild(giangVienHuongDan);
 
-                // Thêm thẻ ThoiGianBatDau
                 XmlElement thoiGianBatDau = xmlDoc.CreateElement("ThoiGianBatDau");
                 thoiGianBatDau.InnerText = deTai.ThoiGianBatDau.ToString("yyyy-MM-dd");
                 deTaiNode.AppendChild(thoiGianBatDau);
 
-                // Thêm thẻ ThoiGianKetThuc
                 XmlElement thoiGianKetThuc = xmlDoc.CreateElement("ThoiGianKetThuc");
                 thoiGianKetThuc.InnerText = deTai.ThoiGianKetThuc.ToString("yyyy-MM-dd");
                 deTaiNode.AppendChild(thoiGianKetThuc);
 
-                // Kiểm tra loại đề tài để thêm thông tin đặc biệt
                 if (deTai is DeTaiLyThuyet lyThuyet)
                 {
                     XmlElement apDungThucTe = xmlDoc.CreateElement("ApDungThucTe");
@@ -104,138 +97,155 @@ namespace QuanLyDeTaiNghienCuu_DAL
                     deTaiNode.AppendChild(moiTruong);
                 }
 
+                XmlElement kinhPhi = xmlDoc.CreateElement("KinhPhi");
+                kinhPhi.InnerText = deTai.TinhKinhPhi().ToString(); // Lưu giá trị TinhKinhPhi
+                deTaiNode.AppendChild(kinhPhi);
+
                 root.AppendChild(deTaiNode);
             }
 
             xmlDoc.Save(FilePath);
         }
-
-
-
-
-
-        private DeTaiNCKH ChuyenDoiXMLSangDeTai(XmlNode node)
+        public DeTaiNCKH ChuyenDoiXMLSangDeTai(XmlNode node)
         {
-            // Kiểm tra nút loại đề tài có tồn tại hay không
+
+            string maSo = node["MaSo"]?.InnerText;
+            string tenDeTai = node["TenDeTai"]?.InnerText;
+            string giangVienHuongDan = node["GiangVienHuongDan"]?.InnerText;
+            string nguoiChuTri = node["NguoiChuTri"]?.InnerText;
+            DateTime thoiGianBatDau = DateTime.Parse(node["ThoiGianBatDau"]?.InnerText ?? DateTime.Now.ToString());
+            DateTime thoiGianKetThuc = DateTime.Parse(node["ThoiGianKetThuc"]?.InnerText ?? DateTime.Now.ToString());
+            double kinhPhi = double.Parse(node["KinhPhi"]?.InnerText);
             string loaiDeTai = node["LoaiDeTai"]?.InnerText;
-
-            //if (string.IsNullOrEmpty(loaiDeTai))
-            //{
-            //    throw new Exception("Loại đề tài không hợp lệ hoặc không tồn tại.");
-            //}
-
             DeTaiNCKH deTai = null;
+
             switch (loaiDeTai)
             {
                 case "DeTaiLyThuyet":
                     deTai = new DeTaiLyThuyet
                     {
-                        MaSo = node["MaSo"]?.InnerText,
-                        TenDeTai = node["TenDeTai"]?.InnerText,
+                        MaSo = maSo,
+                        TenDeTai = tenDeTai,
                         ApDungThucTe = bool.Parse(node["ApDungThucTe"]?.InnerText ?? "false"),
-                        ThoiGianBatDau = DateTime.Parse(node["ThoiGianBatDau"]?.InnerText ?? DateTime.Now.ToString()),
-                        ThoiGianKetThuc = DateTime.Parse(node["ThoiGianKetThuc"]?.InnerText ?? DateTime.Now.ToString()),
-                        GiangVienHuongDan = node["GiangVienHuongDan"]?.InnerText,
-                        NguoiChuTri = node["NguoiChuTri"]?.InnerText // Thêm dòng này
+                        ThoiGianBatDau = thoiGianBatDau,
+                        ThoiGianKetThuc = thoiGianKetThuc,
+                        GiangVienHuongDan = giangVienHuongDan,
+                        NguoiChuTri = nguoiChuTri,
+                        KinhPhi = kinhPhi,
                     };
                     break;
 
                 case "DeTaiKinhTe":
                     deTai = new DeTaiKinhTe
                     {
-                        MaSo = node["MaSo"]?.InnerText,
-                        TenDeTai = node["TenDeTai"]?.InnerText,
+                        MaSo = maSo,
+                        TenDeTai = tenDeTai,
                         SoCauHoiKhaoSat = int.Parse(node["SoCauHoiKhaoSat"]?.InnerText ?? "0"),
-                        ThoiGianBatDau = DateTime.Parse(node["ThoiGianBatDau"]?.InnerText ?? DateTime.Now.ToString()),
-                        ThoiGianKetThuc = DateTime.Parse(node["ThoiGianKetThuc"]?.InnerText ?? DateTime.Now.ToString()),
-                        GiangVienHuongDan = node["GiangVienHuongDan"]?.InnerText,
-                        NguoiChuTri = node["NguoiChuTri"]?.InnerText // Thêm dòng này
+                        ThoiGianBatDau = thoiGianBatDau,
+                        ThoiGianKetThuc = thoiGianKetThuc,
+                        GiangVienHuongDan = giangVienHuongDan,
+                        NguoiChuTri = nguoiChuTri,
+                        KinhPhi = kinhPhi,
                     };
                     break;
 
                 case "DeTaiCongNghe":
                     deTai = new DeTaiCongNghe
                     {
-                        MaSo = node["MaSo"]?.InnerText,
-                        TenDeTai = node["TenDeTai"]?.InnerText,
+                        MaSo = maSo,
+                        TenDeTai = tenDeTai,
                         MoiTruong = node["MoiTruong"]?.InnerText,
-                        ThoiGianBatDau = DateTime.Parse(node["ThoiGianBatDau"]?.InnerText ?? DateTime.Now.ToString()),
-                        ThoiGianKetThuc = DateTime.Parse(node["ThoiGianKetThuc"]?.InnerText ?? DateTime.Now.ToString()),
-                        GiangVienHuongDan = node["GiangVienHuongDan"]?.InnerText,
-                        NguoiChuTri = node["NguoiChuTri"]?.InnerText // Thêm dòng này
+                        ThoiGianBatDau = thoiGianBatDau,
+                        ThoiGianKetThuc = thoiGianKetThuc,
+                        GiangVienHuongDan = giangVienHuongDan,
+                        NguoiChuTri = nguoiChuTri,
+                        KinhPhi = kinhPhi,
                     };
                     break;
 
                 default:
                     throw new Exception("Loại đề tài không hợp lệ");
             }
+
             return deTai;
         }
-
-
-        private XmlElement ChuyenDoiDeTaiSangXML(DeTaiNCKH deTai)
+        public XmlElement ChuyenDoiDeTaiSangXML(DeTaiNCKH deTai)//Them the
         {
             XmlDocument xmlDoc = new XmlDocument();
             XmlElement deTaiNode = xmlDoc.CreateElement("DeTaiNCKH");
 
-            // Thêm thẻ MaSo
             XmlElement maSoNode = xmlDoc.CreateElement("MaSo");
             maSoNode.InnerText = deTai.MaSo;
             deTaiNode.AppendChild(maSoNode);
 
-            // Thêm thẻ TenDeTai
             XmlElement tenDeTaiNode = xmlDoc.CreateElement("TenDeTai");
             tenDeTaiNode.InnerText = deTai.TenDeTai;
             deTaiNode.AppendChild(tenDeTaiNode);
 
-            // Thêm thẻ LoaiDeTai
             XmlElement loaiDeTaiNode = xmlDoc.CreateElement("LoaiDeTai");
             loaiDeTaiNode.InnerText = deTai.GetType().Name;
             deTaiNode.AppendChild(loaiDeTaiNode);
 
-            // Thêm thẻ ThoiGianBatDau
             XmlElement thoiGianBatDauNode = xmlDoc.CreateElement("ThoiGianBatDau");
             thoiGianBatDauNode.InnerText = deTai.ThoiGianBatDau.ToString("yyyy-MM-dd");
             deTaiNode.AppendChild(thoiGianBatDauNode);
 
-            // Thêm thẻ ThoiGianKetThuc
             XmlElement thoiGianKetThucNode = xmlDoc.CreateElement("ThoiGianKetThuc");
             thoiGianKetThucNode.InnerText = deTai.ThoiGianKetThuc.ToString("yyyy-MM-dd");
             deTaiNode.AppendChild(thoiGianKetThucNode);
 
-            // Thêm thẻ GiangVienHuongDan
             XmlElement giangVienHuongDanNode = xmlDoc.CreateElement("GiangVienHuongDan");
             giangVienHuongDanNode.InnerText = deTai.GiangVienHuongDan;
             deTaiNode.AppendChild(giangVienHuongDanNode);
 
-            // Thêm thẻ NguoiChuTri (Đây là phần bổ sung)
             XmlElement nguoiChuTriNode = xmlDoc.CreateElement("NguoiChuTri");
             nguoiChuTriNode.InnerText = deTai.NguoiChuTri;
             deTaiNode.AppendChild(nguoiChuTriNode);
 
-            // Nếu là DeTaiLyThuyet, thêm thẻ ApDungThucTe
             if (deTai is DeTaiLyThuyet lyThuyet)
             {
                 XmlElement apDungThucTeNode = xmlDoc.CreateElement("ApDungThucTe");
                 apDungThucTeNode.InnerText = lyThuyet.ApDungThucTe.ToString();
                 deTaiNode.AppendChild(apDungThucTeNode);
             }
-            // Nếu là DeTaiKinhTe, thêm thẻ SoCauHoiKhaoSat
             else if (deTai is DeTaiKinhTe kinhTe)
             {
                 XmlElement soCauHoiNode = xmlDoc.CreateElement("SoCauHoiKhaoSat");
                 soCauHoiNode.InnerText = kinhTe.SoCauHoiKhaoSat.ToString();
                 deTaiNode.AppendChild(soCauHoiNode);
             }
-            // Nếu là DeTaiCongNghe, thêm thẻ MoiTruong
             else if (deTai is DeTaiCongNghe congNghe)
             {
                 XmlElement moiTruongNode = xmlDoc.CreateElement("MoiTruong");
                 moiTruongNode.InnerText = congNghe.MoiTruong;
                 deTaiNode.AppendChild(moiTruongNode);
             }
-
+            XmlElement kinhPhiNode = xmlDoc.CreateElement("KinhPhi");
+            kinhPhiNode.InnerText = deTai.KinhPhi.ToString(); 
+            deTaiNode.AppendChild(kinhPhiNode);
             return deTaiNode;
+        }
+        public void CapNhatKinhPhi(double tiLeTang)
+        {
+                XmlDocument xmlDoc = new XmlDocument();
+                xmlDoc.Load("D:\\HDT_BaiNhomCuoiKy\\QuanLyDeTaiNghienCuu_GUI\\DanhSachDeTai.xml");
+                XmlNodeList deTaiNodes = xmlDoc.SelectNodes("/DeTaiNCKHList/DeTaiNCKH");
+                double kinhPhiMoi;
+                foreach (XmlNode deTaiNode in deTaiNodes)
+                {
+                    double kinhPhiHienTai = double.Parse(deTaiNode.SelectSingleNode("KinhPhi").InnerText);
+                    kinhPhiMoi = kinhPhiHienTai * tiLeTang;
+                    XmlNode kinhPhiNode = deTaiNode.SelectSingleNode("KinhPhi");
+                    if (kinhPhiNode != null)
+                    {
+                        kinhPhiNode.InnerText = kinhPhiMoi.ToString();
+                    }
+                    else
+                    {
+                        Console.WriteLine("Node KinhPhi không tồn tại!");
+                    }
+                }
+                xmlDoc.Save("D:\\HDT_BaiNhomCuoiKy\\QuanLyDeTaiNghienCuu_GUI\\DanhSachDeTai.xml");
         }
     }
 }
