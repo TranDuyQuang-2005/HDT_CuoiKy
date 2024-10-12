@@ -2,6 +2,7 @@ using QuanLyDeTaiNghienCuu_DAL;
 using QuanLyDeTaiNghienCuu_DTO;
 using System;
 using System.Collections.Generic;
+using System.Xml;
 
 namespace QuanLyDeTaiNghienCuu_BLL
 {
@@ -34,10 +35,10 @@ namespace QuanLyDeTaiNghienCuu_BLL
         public List<DeTaiNCKH> TimKiemDeTaiTheoTen(string keyword)
         {
             return danhSachDeTai.FindAll(dt =>
-                (dt.TenDeTai != null && dt.TenDeTai.Contains(keyword)) ||  // Kiểm tra null trước khi Contains
+                (dt.TenDeTai != null && dt.TenDeTai.Contains(keyword)) ||  
                 dt.MaSo == keyword ||
-                (dt.GiangVienHuongDan != null && dt.GiangVienHuongDan.Contains(keyword)) ||  // Kiểm tra null
-                (dt.NguoiChuTri != null && dt.NguoiChuTri.Contains(keyword))  // Kiểm tra null
+                (dt.GiangVienHuongDan != null && dt.GiangVienHuongDan.Contains(keyword)) ||  
+                (dt.NguoiChuTri != null && dt.NguoiChuTri.Contains(keyword))  
             );
         }
 
@@ -45,21 +46,11 @@ namespace QuanLyDeTaiNghienCuu_BLL
         {
             return danhSachDeTai.FindAll(dt => dt.GiangVienHuongDan.Contains(tenGV));
         }
-
-        public void CapNhatKinhPhiTang10PhanTram()
+        public void CapNhatToanBoKinhPhi(double tiLeTang)
         {
-            foreach (var deTai in danhSachDeTai)
-            {
-                // Gọi TinhKinhPhi để đảm bảo lấy giá trị kinh phí đúng theo logic
-                double kinhPhiHienTai = deTai.TinhKinhPhi();
-
-                // Tăng kinh phí lên 10%
-                deTai.KinhPhi = kinhPhiHienTai * 1.1; // Cập nhật KinhPhi với 10% tăng thêm
-            }
-
-            //LuuDanhSachDeTai();
+            DeTaiDAL deTaiDAL = new DeTaiDAL();
+            deTaiDAL.CapNhatKinhPhi(tiLeTang);
         }
-
 
         public List<DeTaiNCKH> LocDeTaiKinhPhiTren10Trieu()
         {
