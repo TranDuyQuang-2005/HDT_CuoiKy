@@ -10,52 +10,45 @@ namespace QuanLyDeTaiNghienCuu_DTO
     {
         private string maSo;
         private string tenDeTai;
-        private double kinhPhi;
         private string nguoiChuTri;
         private string giangVienHuongDan;
         private DateTime thoiGianBatDau;
         private DateTime thoiGianKetThuc;
-
+        private double kinhPhi;
         public string MaSo
         {
             get { return maSo; }
             set { maSo = value; }
         }
-
         public string TenDeTai
         {
             get { return tenDeTai; }
             set { tenDeTai = value; }
         }
-
-        public double KinhPhi
-        {
-            get { return kinhPhi; }
-            set { kinhPhi = value; }
-        }
-
         public string NguoiChuTri
         {
             get { return nguoiChuTri; }
             set { nguoiChuTri = value; }
         }
-
         public string GiangVienHuongDan
         {
             get { return giangVienHuongDan; }
             set { giangVienHuongDan = value; }
         }
-
         public DateTime ThoiGianBatDau
         {
             get { return thoiGianBatDau; }
             set { thoiGianBatDau = value; }
         }
-
         public DateTime ThoiGianKetThuc
         {
             get { return thoiGianKetThuc; }
             set { thoiGianKetThuc = value; }
+        }
+        public double KinhPhi
+        {
+            get { return kinhPhi; }
+            set { kinhPhi = value; }
         }
         public abstract double TinhKinhPhi();
     }
