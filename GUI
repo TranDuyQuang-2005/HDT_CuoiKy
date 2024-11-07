@@ -1,0 +1,459 @@
+using System;
+using System.Collections.Generic;
+using QuanLyDeTaiNghienCuu_DTO;
+using QuanLyDeTaiNghienCuu_BLL;
+using System.Xml.Linq;
+
+namespace QuanLyDeTaiNghienCuu_GUI
+{
+    class GUI
+    {
+        DeTaiBLL deTaiBLL=new DeTaiBLL();
+        public void HienThiMenu()
+        {
+            string choice;
+            while (true)
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("===========================================");
+                Console.WriteLine("                MENU CHÍNH                 ");
+                Console.WriteLine("===========================================");
+                Console.WriteLine("  0. Load thông tin.");
+                Console.WriteLine("  1. Xuất danh sách đề tài.");
+                Console.WriteLine("  2. Thêm đề tài.");
+                Console.WriteLine("  3. Tìm kiếm đề tài.");
+                Console.WriteLine("  4. Xuất đề tài theo giảng viên.");
+                Console.WriteLine("  5. Cập nhật kinh phí đề tài (tăng 10%).");
+                Console.WriteLine("  6. Xuất danh sách đề tài có kinh phí > 10 triệu.");
+                Console.WriteLine("  7. Xuất danh sách đề tài lý thuyết có áp dụng thực tế.");
+                Console.WriteLine("  8. Xuất đề tài kinh tế có > 100 câu hỏi.");
+                Console.WriteLine("  9. Xuất đề tài có thời gian thực hiện > 4 tháng.");
+                Console.WriteLine(" 10. Thoát chương trình.");
+                Console.WriteLine("===========================================");
+                Console.ResetColor();
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Write("\nNHẬP LỰA CHỌN: ");
+                choice = Console.ReadLine();
+                Console.ResetColor();
+                switch (choice)
+                {
+                    case "0":
+                        deTaiBLL.LuuDanhSachDeTai();
+                        break;
+                    case "1":
+                        XuatDanhSachDeTai();
+                        break;
+                    case "2":
+                        ThemDeTai();
+                        break;
+                    case "3":
+                        TimKiemDeTai();
+                        break;
+                    case "4":
+                        XuatDeTaiTheoGiangVien();
+                        break;
+                    case "5":
+                        CapNhatKinhPhi();
+                        break;
+                    case "6":
+                        XuatDeTaiKinhPhiTren10Trieu();
+                        break;
+                    case "7":
+                        XuatDeTaiLyThuyetApDungThucTe();
+                        break;
+                    case "8":
+                        XuatDeTaiKinhTeSoCauHoiTren100();
+                        break;
+                    case "9":
+                        XuatDeTaiThoiGianTren4Thang();
+                        break;
+                    case "10":
+                        return;
+                    default:
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine("Lựa chọn không hợp lệ.");
+                        Console.ResetColor();
+                        break;
+                }
+            }
+        }
+        public void ThemDeTai()
+        {
+            Console.WriteLine("DANH SÁCH ĐỀ TÀI:");
+            Console.WriteLine("\t1. Nghiên cứu lý thuyết");
+            Console.WriteLine("\t2. Kinh tế");
+            Console.WriteLine("\t3. Công nghệ");
+            Console.Write("Nhập loại đề tài cần thêm:  ");
+            string loaiDeTai = Console.ReadLine();
+            DeTaiNCKH deTai = null;
+            switch (loaiDeTai)
+            {
+                case "1":
+                    deTai = new DeTaiLyThuyet();
+                    break;
+                case "2":
+                    deTai = new DeTaiKinhTe();
+                    break;
+                case "3":
+                    deTai = new DeTaiCongNghe();
+                    break;
+                default:
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("Lựa chọn không hợp lệ.");
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.ResetColor();
+                    return;
+            }
+            bool maSoTrung;
+            do
+            { 
+                Console.Write("Nhập mã số đề tài: ");
+                deTai.MaSo = Console.ReadLine();
+                maSoTrung = false; 
+                List<DeTaiNCKH> danhSachDeTai = deTaiBLL.DocDanhSachDeTai(); 
+                foreach (DeTaiNCKH deTaiHienTai in danhSachDeTai)
+                {
+                    if (deTaiHienTai.MaSo == deTai.MaSo)
+                    {
+                        maSoTrung = true;
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine("Mã số đề tài đã tồn tại. Vui lòng nhập mã số khác.");
+                        Console.ResetColor();
+                        break; 
+                    }
+                }
+            } while (maSoTrung); 
+            Console.Write("Nhập tên đề tài: ");
+            deTai.TenDeTai = Console.ReadLine();
+            Console.Write("Nhập tên người chủ trì: ");
+            deTai.NguoiChuTri = Console.ReadLine();
+            Console.Write("Nhập tên giảng viên hướng dẫn: ");
+            deTai.GiangVienHuongDan = Console.ReadLine();
+            DateTime thoiGianKetThuc;
+            while (true)
+            {
+                Console.Write("Nhập thời gian bắt đầu (yyyy-MM-dd): ");
+                deTai.ThoiGianBatDau = DateTime.Parse(Console.ReadLine());
+                Console.Write("Nhập thời gian kết thúc (yyyy-MM-dd): ");
+                thoiGianKetThuc = DateTime.Parse(Console.ReadLine());
+                if (thoiGianKetThuc >= deTai.ThoiGianBatDau)
+                {
+                    deTai.ThoiGianKetThuc = thoiGianKetThuc;
+                    break;
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("Dữ liệu thời gian bắt đầu và thời gian kết thúc không hợp lệ. Vui lòng nhập lại!");
+                    Console.ResetColor();
+                }
+            }
+            if (deTai is DeTaiLyThuyet lyThuyet)
+            {
+                Console.Write("Có áp dụng thực tế không? (true/false): ");
+                lyThuyet.ApDungThucTe = bool.Parse(Console.ReadLine());
+            }
+            else if (deTai is DeTaiKinhTe kinhTe)
+            {
+                Console.Write("Nhập số câu hỏi khảo sát: ");
+                kinhTe.SoCauHoiKhaoSat = int.Parse(Console.ReadLine());
+            }
+            else if (deTai is DeTaiCongNghe congNghe)
+            {
+                Console.Write("Nhập môi trường (web/mobile/window): ");
+                congNghe.MoiTruong = Console.ReadLine();
+            }
+
+            deTaiBLL.ThemDeTai(deTai);
+            Console.WriteLine("Đề tài đã được thêm thành công.");
+        }
+        public void XuatDanhSachDeTai()
+        {
+            DeTaiBLL deTaiBLL = new DeTaiBLL();
+            List<DeTaiNCKH> danhSach = deTaiBLL.DocDanhSachDeTai();
+            int stt = 1;
+            foreach (var deTai in danhSach)
+            {
+                Console.WriteLine($"Thông tin Đề tài Nghiên cứu: {stt}");
+                Console.WriteLine("--------------------------------------------------");
+                Console.WriteLine($"Mã số:                {deTai.MaSo}");
+                Console.WriteLine($"Tên đề tài:           {deTai.TenDeTai}");
+                Console.WriteLine($"Người chủ trì:        {deTai.NguoiChuTri}");
+                Console.WriteLine($"Giảng viên hướng dẫn: {deTai.GiangVienHuongDan}");
+                Console.WriteLine($"Kinh phí:             {deTai.KinhPhi}");
+                Console.WriteLine($"Thời gian bắt đầu:    {deTai.ThoiGianBatDau.ToShortDateString()}");
+                Console.WriteLine($"Thời gian kết thúc:   {deTai.ThoiGianKetThuc.ToShortDateString()}");
+                if (deTai is DeTaiKinhTe deTaiKinhTe)
+                {
+                    Console.WriteLine($"Phí nghiên cứu:       {deTaiKinhTe.TinhPhiNghienCuu()}");
+                }
+                else if (deTai is DeTaiCongNghe deTaiCongNghe)
+                {
+                    Console.WriteLine($"Phí nghiên cứu:       {deTaiCongNghe.TinhPhiNghienCuu()}");
+                }
+                Console.WriteLine("--------------------------------------------------");
+                stt++;
+            }
+        }
+        public void TimKiemDeTai()
+        {
+            Console.WriteLine("Chọn cách tìm kiếm:");
+            Console.WriteLine("\t1. Tìm kiếm theo tên đề tài");
+            Console.WriteLine("\t2. Tìm kiếm theo mã số");
+            Console.WriteLine("\t3. Tìm kiếm theo giảng viên");
+            Console.WriteLine("\t4. Tìm kiếm theo người chủ trì");
+            Console.Write("Nhập lựa chọn: ");
+            string luaChon = Console.ReadLine();
+            Console.Write("Nhập từ khóa tìm kiếm: ");
+            string keyword = Console.ReadLine();
+            DeTaiBLL deTaiBLL2 = new DeTaiBLL();
+            List<DeTaiNCKH> ketQua = null;
+            switch (luaChon)
+            {
+                case "1":
+                    ketQua = deTaiBLL2.TimKiemDeTaiTheoTen(keyword);
+                    break;
+                case "2":
+                    ketQua = deTaiBLL2.TimKiemDeTaiTheoMaSo(keyword);
+                    break;
+                case "3":
+                    ketQua = deTaiBLL2.TimKiemDeTaiTheoGiangVien(keyword);
+                    break;
+                case "4":
+                    ketQua = deTaiBLL2.TimKiemDeTaiTheoChuTri(keyword);
+                    break;
+                default:
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("Lựa chọn không hợp lệ.");
+                    Console.ResetColor();
+                    return;
+            }
+            if (ketQua == null || ketQua.Count == 0)
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("Không tìm thấy đề tài nào.");
+                Console.ResetColor();
+            }
+            else
+            {
+                int stt = 1;
+                foreach (var deTai in ketQua)
+                {
+                    Console.WriteLine($"Thông tin Đề tài Nghiên cứu: {stt}");
+                    Console.WriteLine("--------------------------------------------------");
+                    Console.WriteLine($"Mã số:                {deTai.MaSo}");
+                    Console.WriteLine($"Tên đề tài:           {deTai.TenDeTai}");
+                    Console.WriteLine($"Người chủ trì:        {deTai.NguoiChuTri}");
+                    Console.WriteLine($"Giảng viên hướng dẫn: {deTai.GiangVienHuongDan}");
+                    Console.WriteLine($"Kinh phí:             {deTai.KinhPhi}");
+                    Console.WriteLine($"Thời gian bắt đầu:    {deTai.ThoiGianBatDau.ToShortDateString()}");
+                    Console.WriteLine($"Thời gian kết thúc:   {deTai.ThoiGianKetThuc.ToShortDateString()}");
+                    if (deTai is DeTaiKinhTe deTaiKinhTe)
+                    {
+                        Console.WriteLine($"Phí nghiên cứu:       {deTaiKinhTe.TinhPhiNghienCuu()}");
+                    }
+                    else if (deTai is DeTaiCongNghe deTaiCongNghe)
+                    {
+                        Console.WriteLine($"Phí nghiên cứu:       {deTaiCongNghe.TinhPhiNghienCuu()}");
+                    }
+                    Console.WriteLine("--------------------------------------------------");
+                    stt++;
+                }
+            }
+        }
+        public void XuatDeTaiTheoGiangVien()
+        {
+            Console.Write("Nhập tên giảng viên hướng dẫn: ");
+            string tenGV = Console.ReadLine();
+            DeTaiBLL deTaiBLL2 = new DeTaiBLL();
+            List<DeTaiNCKH> ketQua = deTaiBLL2.TimKiemDeTaiTheoGiangVien(tenGV);
+            if (ketQua.Count == 0)
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("Không tìm thấy đề tài nào của giảng viên này.");
+                Console.ResetColor();
+            }
+            else
+            {
+                int stt = 1;
+                foreach (var deTai in ketQua)
+                {
+                    Console.WriteLine($"Thông tin Đề tài Nghiên cứu: {stt}");
+                    Console.WriteLine("--------------------------------------------------");
+                    Console.WriteLine($"Mã số:                {deTai.MaSo}");
+                    Console.WriteLine($"Tên đề tài:           {deTai.TenDeTai}");
+                    Console.WriteLine($"Người chủ trì:        {deTai.NguoiChuTri}");
+                    Console.WriteLine($"Giảng viên hướng dẫn: {deTai.GiangVienHuongDan}");
+                    Console.WriteLine($"Kinh phí:             {deTai.KinhPhi}");
+                    Console.WriteLine($"Thời gian bắt đầu:    {deTai.ThoiGianBatDau.ToShortDateString()}");
+                    Console.WriteLine($"Thời gian kết thúc:   {deTai.ThoiGianKetThuc.ToShortDateString()}");
+                    if (deTai is DeTaiKinhTe deTaiKinhTe)
+                    {
+                        Console.WriteLine($"Phí nghiên cứu:       {deTaiKinhTe.TinhPhiNghienCuu()}");
+                    }
+                    else if (deTai is DeTaiCongNghe deTaiCongNghe)
+                    {
+                        Console.WriteLine($"Phí nghiên cứu:       {deTaiCongNghe.TinhPhiNghienCuu()}");
+                    }
+                    Console.WriteLine("--------------------------------------------------");
+                    stt++;
+                }
+            }
+        }
+        public void CapNhatKinhPhi()
+        {
+            deTaiBLL.CapNhatToanBoKinhPhi(1.1);
+            Console.WriteLine("Đã cập nhật kinh phí của các đề tài lên 10%.");
+        }
+        public void XuatDeTaiKinhPhiTren10Trieu()
+        {
+            DeTaiBLL deTaiBLL2 = new DeTaiBLL();
+            List<DeTaiNCKH> ketQua = deTaiBLL2.LocDeTaiKinhPhiTren10Trieu();
+            if (ketQua.Count == 0)
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("Không có đề tài nào có kinh phí > 10 triệu.");
+                Console.ResetColor();
+            }
+            else
+            {
+                foreach (var deTai in ketQua)
+                {
+                    Console.WriteLine("Thông tin Đề tài Nghiên cứu:");
+                    Console.WriteLine("--------------------------------------------------");
+                    Console.WriteLine($"Mã số:                {deTai.MaSo}");
+                    Console.WriteLine($"Tên đề tài:           {deTai.TenDeTai}");
+                    Console.WriteLine($"Người chủ trì:        {deTai.NguoiChuTri}");
+                    Console.WriteLine($"Giảng viên hướng dẫn: {deTai.GiangVienHuongDan}");
+                    Console.WriteLine($"Kinh phí:             {deTai.KinhPhi}");
+                    Console.WriteLine($"Thời gian bắt đầu:    {deTai.ThoiGianBatDau.ToShortDateString()}");
+                    Console.WriteLine($"Thời gian kết thúc:   {deTai.ThoiGianKetThuc.ToShortDateString()}");
+                    if (deTai is DeTaiKinhTe deTaiKinhTe)
+                    {
+                        Console.WriteLine($"Phí nghiên cứu:       {deTaiKinhTe.TinhPhiNghienCuu()}");
+                    }
+                    else if (deTai is DeTaiCongNghe deTaiCongNghe)
+                    {
+                        Console.WriteLine($"Phí nghiên cứu:       {deTaiCongNghe.TinhPhiNghienCuu()}");
+                    }
+                    Console.WriteLine("--------------------------------------------------");
+                }
+            }
+        }
+        public void XuatDeTaiLyThuyetApDungThucTe()
+        {
+            DeTaiBLL deTaiBLL2 = new DeTaiBLL();
+            List<DeTaiNCKH> ketQua = deTaiBLL2.LocDeTaiLyThuyetApDungThucTe();
+            if (ketQua.Count == 0)
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("Không có đề tài lý thuyết nào có khả năng áp dụng thực tế.");
+                Console.ResetColor();
+            }
+            else
+            {
+                int stt = 1;
+                foreach (var deTai in ketQua)
+                {
+                    Console.WriteLine($"Thông tin Đề tài Nghiên cứu: {stt}");
+                    Console.WriteLine("--------------------------------------------------");
+                    Console.WriteLine($"Mã số:                {deTai.MaSo}");
+                    Console.WriteLine($"Tên đề tài:           {deTai.TenDeTai}");
+                    Console.WriteLine($"Người chủ trì:        {deTai.NguoiChuTri}");
+                    Console.WriteLine($"Giảng viên hướng dẫn: {deTai.GiangVienHuongDan}");
+                    Console.WriteLine($"Kinh phí:             {deTai.KinhPhi}");
+                    Console.WriteLine($"Thời gian bắt đầu:    {deTai.ThoiGianBatDau.ToShortDateString()}");
+                    Console.WriteLine($"Thời gian kết thúc:   {deTai.ThoiGianKetThuc.ToShortDateString()}");
+                    if (deTai is DeTaiKinhTe deTaiKinhTe)
+                    {
+                        Console.WriteLine($"Phí nghiên cứu:       {deTaiKinhTe.TinhPhiNghienCuu()}");
+                    }
+                    else if (deTai is DeTaiCongNghe deTaiCongNghe)
+                    {
+                        Console.WriteLine($"Phí nghiên cứu:       {deTaiCongNghe.TinhPhiNghienCuu()}");
+                    }
+                    Console.WriteLine("--------------------------------------------------");
+                    stt++;
+                }
+            }
+        }
+        public void XuatDeTaiKinhTeSoCauHoiTren100()
+        {
+            DeTaiBLL deTaiBLL2 = new DeTaiBLL();
+            List<DeTaiNCKH> ketQua = deTaiBLL2.LocDeTaiKinhTeSoCauHoiTren100();
+            if (ketQua.Count == 0)
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("Không có đề tài kinh tế nào có số câu hỏi khảo sát > 100.");
+                Console.ResetColor();
+            }
+            else
+            {
+                int stt = 1;
+                foreach (var deTai in ketQua)
+                {
+                    Console.WriteLine($"Thông tin Đề tài Nghiên cứu: {stt}");
+                    Console.WriteLine("--------------------------------------------------");
+                    Console.WriteLine($"Mã số:                {deTai.MaSo}");
+                    Console.WriteLine($"Tên đề tài:           {deTai.TenDeTai}");
+                    Console.WriteLine($"Người chủ trì:        {deTai.NguoiChuTri}");
+                    Console.WriteLine($"Giảng viên hướng dẫn: {deTai.GiangVienHuongDan}");
+                    Console.WriteLine($"Kinh phí:             {deTai.KinhPhi}");
+                    Console.WriteLine($"Thời gian bắt đầu:    {deTai.ThoiGianBatDau.ToShortDateString()}");
+                    Console.WriteLine($"Thời gian kết thúc:   {deTai.ThoiGianKetThuc.ToShortDateString()}");
+                    if (deTai is DeTaiKinhTe deTaiKinhTe)
+                    {
+                        Console.WriteLine($"Phí nghiên cứu:       {deTaiKinhTe.TinhPhiNghienCuu()}");
+                    }
+                    else if (deTai is DeTaiCongNghe deTaiCongNghe)
+                    {
+                        Console.WriteLine($"Phí nghiên cứu:       {deTaiCongNghe.TinhPhiNghienCuu()}");
+                    }
+                    Console.WriteLine("--------------------------------------------------");
+                    stt++;
+                }
+            }
+        }
+        public void XuatDeTaiThoiGianTren4Thang()
+        {
+            DeTaiBLL deTaiBLL2 = new DeTaiBLL();
+            List<DeTaiNCKH> ketQua = deTaiBLL2.LocDeTaiThoiGianTren4Thang();
+            if (ketQua.Count == 0)
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("Không có đề tài nào có thời gian thực hiện > 4 tháng.");
+                Console.ResetColor();
+            }
+            else
+            {
+                int stt = 1;
+                foreach (var deTai in ketQua)
+                {
+                    Console.WriteLine($"Thông tin Đề tài Nghiên cứu: {stt}");
+                    Console.WriteLine("--------------------------------------------------");
+                    Console.WriteLine($"Mã số:                {deTai.MaSo}");
+                    Console.WriteLine($"Tên đề tài:           {deTai.TenDeTai}");
+                    Console.WriteLine($"Người chủ trì:        {deTai.NguoiChuTri}");
+                    Console.WriteLine($"Giảng viên hướng dẫn: {deTai.GiangVienHuongDan}");
+                    Console.WriteLine($"Kinh phí:             {deTai.KinhPhi}");
+                    Console.WriteLine($"Thời gian bắt đầu:    {deTai.ThoiGianBatDau.ToShortDateString()}");
+                    Console.WriteLine($"Thời gian kết thúc:   {deTai.ThoiGianKetThuc.ToShortDateString()}");
+                    if (deTai is DeTaiKinhTe deTaiKinhTe)
+                    {
+                        Console.WriteLine($"Phí nghiên cứu:       {deTaiKinhTe.TinhPhiNghienCuu()}");
+                    }
+                    else if (deTai is DeTaiCongNghe deTaiCongNghe)
+                    {
+                        Console.WriteLine($"Phí nghiên cứu:       {deTaiCongNghe.TinhPhiNghienCuu()}");
+                    }
+                    Console.WriteLine("--------------------------------------------------");
+                    stt++;
+                }
+            }
+        }
+        public void DocDanhSachDeTai()
+        {
+            List<DeTaiNCKH> danhSach = deTaiBLL.DocDanhSachDeTai();
+        }
+    }
+}
