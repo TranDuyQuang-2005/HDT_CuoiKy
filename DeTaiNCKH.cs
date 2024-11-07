@@ -8,13 +8,13 @@ namespace QuanLyDeTaiNghienCuu_DTO
 {
     public abstract class DeTaiNCKH
     {
-        private string maSo;
-        private string tenDeTai;
-        private string nguoiChuTri;
-        private string giangVienHuongDan;
-        private DateTime thoiGianBatDau;
-        private DateTime thoiGianKetThuc;
-        private double kinhPhi;
+        protected string maSo;
+        protected string tenDeTai;
+        protected string nguoiChuTri;
+        protected string giangVienHuongDan;
+        protected DateTime thoiGianBatDau;
+        protected DateTime thoiGianKetThuc;
+        protected double kinhPhi;
         public string MaSo
         {
             get { return maSo; }
@@ -52,29 +52,24 @@ namespace QuanLyDeTaiNghienCuu_DTO
         }
         public abstract double TinhKinhPhi();
     }
-
     public class DeTaiLyThuyet : DeTaiNCKH
     {
-        private bool _apDungThucTe;
+        private bool apDungThucTe;
 
         public bool ApDungThucTe
         {
-            get { return _apDungThucTe; }
-            set { _apDungThucTe = value; }
+            get { return apDungThucTe; }
+            set { apDungThucTe = value; }
         }
-
-
         public override double TinhKinhPhi()
         {
             return ApDungThucTe ? 15000000 : 8000000;
         }
     }
-
     public interface I
     {
         double TinhPhiNghienCuu();
     }
-
     public class DeTaiKinhTe : DeTaiNCKH, I
     {
         private int soCauHoiKhaoSat;
@@ -93,7 +88,6 @@ namespace QuanLyDeTaiNghienCuu_DTO
             return SoCauHoiKhaoSat > 100 ? SoCauHoiKhaoSat * 550 : SoCauHoiKhaoSat * 450;
         }
     }
-
     public class DeTaiCongNghe : DeTaiNCKH, I
     {
         private string moiTruong;
@@ -110,7 +104,6 @@ namespace QuanLyDeTaiNghienCuu_DTO
             else
                 return 10000000;
         }
-
         public  double TinhPhiNghienCuu()
         {
             if (MoiTruong == "mobile")
