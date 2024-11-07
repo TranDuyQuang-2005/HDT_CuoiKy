@@ -12,16 +12,16 @@ namespace QuanLyDeTaiNghienCuu_DAL
 {
     public class DeTaiDAL
     {
-        string FilePath = "D:\\HDT_BaiNhomCuoiKy\\QuanLyDeTaiNghienCuu_GUI\\DanhSachDeTai.xml";
+        string FilePath = "D:\\Nhom1_LTHDT_T4-6\\HDT_BaiNhomCuoiKy\\QuanLyDeTaiNghienCuu_GUI\\DanhSachDeTai.xml";
         public List<DeTaiNCKH> DocDanhSachDeTai()
         {
             
             List<DeTaiNCKH> danhSachDeTai = new List<DeTaiNCKH>();
-            if (!File.Exists(FilePath))
+            if (!File.Exists(FilePath)) //Kiểm tra sự tồn tại đường dẫn file
                 return danhSachDeTai;
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.Load(FilePath);
-            XmlNodeList nodeList = xmlDoc.SelectNodes("/DeTaiNCKHList/DeTaiNCKH");
+            XmlNodeList nodeList = xmlDoc.SelectNodes("/DeTaiNCKHList/DeTaiNCKH"); //tạo danh sách node chứa các phần tử của <DetaiNCKH> được tìm thấy bới Phương thức SelectNodes
             foreach (XmlNode node in nodeList)
             {
                 DeTaiNCKH deTai = ChuyenDoiXMLSangDeTai(node);
@@ -32,9 +32,10 @@ namespace QuanLyDeTaiNghienCuu_DAL
         public void LuuDanhSachDeTai(List<DeTaiNCKH> danhSachDeTai)
         {
             XmlDocument xmlDoc = new XmlDocument();
+            XmlDeclaration xmlDecl = xmlDoc.CreateXmlDeclaration("1.0", "utf-8", null);
+            xmlDoc.AppendChild(xmlDecl); 
             XmlElement root = xmlDoc.CreateElement("DeTaiNCKHList");
             xmlDoc.AppendChild(root);
-
             foreach (DeTaiNCKH deTai in danhSachDeTai)
             {
                 XmlElement deTaiNode = xmlDoc.CreateElement("DeTaiNCKH");
@@ -52,7 +53,7 @@ namespace QuanLyDeTaiNghienCuu_DAL
                 {
                     loaiDeTai.InnerText = "DeTaiCongNghe";
                 }
-                deTaiNode.AppendChild(loaiDeTai);
+                deTaiNode.AppendChild(loaiDeTai); //Thêm phần tử loaiDeTai vào bên trong deTaiNode
 
                 XmlElement maSo = xmlDoc.CreateElement("MaSo");
                 maSo.InnerText = deTai.MaSo;
@@ -101,14 +102,12 @@ namespace QuanLyDeTaiNghienCuu_DAL
                 kinhPhi.InnerText = deTai.TinhKinhPhi().ToString(); // Lưu giá trị TinhKinhPhi
                 deTaiNode.AppendChild(kinhPhi);
 
-                root.AppendChild(deTaiNode);
+                root.AppendChild(deTaiNode); //Thêm deTaiNode vào phần tử danh sách các đề tài
             }
-
             xmlDoc.Save(FilePath);
         }
         public DeTaiNCKH ChuyenDoiXMLSangDeTai(XmlNode node)
         {
-
             string maSo = node["MaSo"]?.InnerText;
             string tenDeTai = node["TenDeTai"]?.InnerText;
             string giangVienHuongDan = node["GiangVienHuongDan"]?.InnerText;
@@ -162,14 +161,12 @@ namespace QuanLyDeTaiNghienCuu_DAL
                         KinhPhi = kinhPhi,
                     };
                     break;
-
                 default:
                     throw new Exception("Loại đề tài không hợp lệ");
             }
-
             return deTai;
         }
-        public XmlElement ChuyenDoiDeTaiSangXML(DeTaiNCKH deTai)//Them the
+        public XmlElement ChuyenDoiDeTaiSangXML(DeTaiNCKH deTai) //Them the
         {
             XmlDocument xmlDoc = new XmlDocument();
             XmlElement deTaiNode = xmlDoc.CreateElement("DeTaiNCKH");
@@ -228,7 +225,7 @@ namespace QuanLyDeTaiNghienCuu_DAL
         public void CapNhatKinhPhi(double tiLeTang)
         {
                 XmlDocument xmlDoc = new XmlDocument();
-                xmlDoc.Load("D:\\HDT_BaiNhomCuoiKy\\QuanLyDeTaiNghienCuu_GUI\\DanhSachDeTai.xml");
+                xmlDoc.Load(FilePath);
                 XmlNodeList deTaiNodes = xmlDoc.SelectNodes("/DeTaiNCKHList/DeTaiNCKH");
                 double kinhPhiMoi;
                 foreach (XmlNode deTaiNode in deTaiNodes)
@@ -238,14 +235,14 @@ namespace QuanLyDeTaiNghienCuu_DAL
                     XmlNode kinhPhiNode = deTaiNode.SelectSingleNode("KinhPhi");
                     if (kinhPhiNode != null)
                     {
-                        kinhPhiNode.InnerText = kinhPhiMoi.ToString();
+                        kinhPhiNode.InnerText = kinhPhiMoi.ToString(); //Cập nhật kinh phí mới vào file
                     }
                     else
                     {
                         Console.WriteLine("Node KinhPhi không tồn tại!");
                     }
                 }
-                xmlDoc.Save("D:\\HDT_BaiNhomCuoiKy\\QuanLyDeTaiNghienCuu_GUI\\DanhSachDeTai.xml");
+                xmlDoc.Save(FilePath);
         }
     }
 }
